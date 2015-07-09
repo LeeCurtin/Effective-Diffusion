@@ -17,10 +17,9 @@ ygrid = -3:0.01:3;
 [X,Y] = meshgrid(xgrid,ygrid);
 
 uout1 = evaluate(F1,X,Y);
-
+fig = figure(2);
 % colormap(cool);
 for i = 1:length(tspan)
-    fig = figure(2);
     u = fig.Units;
     fig.Units = 'normalized';
     fig.Color = [1 1 1];

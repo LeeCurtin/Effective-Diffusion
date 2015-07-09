@@ -10,7 +10,7 @@ g = decsg(gd,sf,ns); %Creates g using the matrices produced by PDETOOLBOX
 
 %SET INITIAL CONDITIONS
 
-[C,A,F]=assema(p,t,0,1,'0!1!1!1!1!1!1!1!1'); 
+[C,A,F]=assema(p,t,0,1,'0!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1!1'); 
 u0=A\F;
 
 % CREATE A PDE ENTITY FOR ONE PDE WITH ONE DEPENDENT VARIABLE
@@ -30,16 +30,16 @@ pg = pdeGeometryFromEdges(g); % Creates a geometry entity
 D_water = 3600*50.e-5;
 D_paste = 3600*67.e-7;
 
-c_temp = sprintf('%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f',D_water,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste);
+c_temp = sprintf('%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f!%1.3f',D_water,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste,D_paste);
 
 c = char(c_temp);
 
 %COEFFICIENTS OF A
-a = ['0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00'];
+a = ['0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00!0.00'];
 
 %COEFFICIENTS OF F
 % f = char('-0.5*u(1).*u(3)!-0.5*u(1).*u(3)','0.5*u(1).*u(3)!0.5*u(1).*u(3)','0.0!0.0');
-f = char('0!0!0!0!0!0!0!0!0');
+f = char('0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0!0');
 
 %COEFFICIENTS OF D
 d = [1];
