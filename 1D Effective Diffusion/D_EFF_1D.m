@@ -102,23 +102,46 @@ N=2;
 
 %Compute Stiffness Matrix and Load Vector
 
-for i = 1:length(varargin)/2;
-    
-A_temp{1} = GaussStiffnessAssembler1D_Diff(X{i},Dir,w,@Diffusivity1,y);
-A_temp{2} = GaussStiffnessAssembler1D_Diff(X{i+1},Dir,w,@Diffusivity2,y);
-A_temp{3} = A_temp{1};
-A_temp{4} = A_temp{2};
+A_temp = cell(length(varargin),1);
+b_temp = cell(length(varargin),1);
+M_temp = cell(length(varargin),1);
 
-b_temp{1} = GaussLoadAssembler1D(X{i},@Sourcef_2,Neu,Dir,y,w);
-b_temp{2} = GaussLoadAssembler1D(X{i+1},@Sourcef_2,Neu,Dir,y,w);
-b_temp{3} = b_temp{1};
-b_temp{4} = b_temp{2};
+for i = 1:2:length(varargin);
+i;
+A_temp{i} = GaussStiffnessAssembler1D_Diff(X{i},Dir,w,@Diffusivity1,y);
+A_temp{i+1} = GaussStiffnessAssembler1D_Diff(X{i+1},Dir,w,@Diffusivity2,y);
+A_temp
+
+b_temp{1} = GaussLoadAssembler1D(X{1},@Sourcef_2,Neu,Dir,y,w);
+b_temp{2} = GaussLoadAssembler1D(X{2},@Sourcef_2,Neu,Dir,y,w);
+b_temp{3} = GaussLoadAssembler1D(X{3},@Sourcef_2,Neu,Dir,y,w);
+b_temp{4} = GaussLoadAssembler1D(X{4},@Sourcef_2,Neu,Dir,y,w);
+b_temp;
 
 M_temp{1} = GaussMassAssembler1D(X{i},Dir,y,w);
 M_temp{2} = GaussMassAssembler1D(X{i+1},Dir,y,w);
 M_temp{3} = M_temp{1};
 M_temp{4} = M_temp{2};
 end
+
+
+% for i = 1:length(varargin)/2;
+%     
+% A_temp{1} = GaussStiffnessAssembler1D_Diff(X{i},Dir,w,@Diffusivity1,y);
+% A_temp{2} = GaussStiffnessAssembler1D_Diff(X{i+1},Dir,w,@Diffusivity2,y);
+% A_temp{3} = A_temp{1};
+% A_temp{4} = A_temp{2};
+% 
+% b_temp{1} = GaussLoadAssembler1D(X{i},@Sourcef_2,Neu,Dir,y,w);
+% b_temp{2} = GaussLoadAssembler1D(X{i+1},@Sourcef_2,Neu,Dir,y,w);
+% b_temp{3} = b_temp{1};
+% b_temp{4} = b_temp{2};
+% 
+% M_temp{1} = GaussMassAssembler1D(X{i},Dir,y,w);
+% M_temp{2} = GaussMassAssembler1D(X{i+1},Dir,y,w);
+% M_temp{3} = M_temp{1};
+% M_temp{4} = M_temp{2};
+% end
 
 A = StiffnessAssemblerDiscontN(A_temp);
 b = LoadAssemblerDiscontN(b_temp);
