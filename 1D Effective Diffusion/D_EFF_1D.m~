@@ -1,4 +1,4 @@
-function [u,x,t,C_0] = D_EFF_1D(h,tau,tend,varargin)
+function [u,x,t,C_0] = D_EFF_1D(h,tau,tend,l1,varargin)
 % A function to solve the following reaction diffusion equation:
 %C_t = D(x)C_xx 
 %h and tau are domain and time step size respectively, with tend being the end time of
@@ -22,6 +22,9 @@ for i = 2:length(varargin)
     X{i} = X_VAL_START:h:X_VAL_END;
 
 end
+
+X{length(varargin)+1} = X_VAL_END:h:X_VAL_END + l1;
+
 x = X{1};
 
 for i = 2:length(X)
@@ -52,7 +55,7 @@ t = t0:tau:tend;
 %Properties
 % k = 0.0625; %Rate of splitting of drug and paste
 C_0b = 1; %Initial 'bound' drug
-C_0f = 0.1; %Initial 'free' drug
+C_0f = 0; %Initial 'free' drug
 C_0 = C_0b + C_0f; %Total drug in system
 
 
@@ -66,9 +69,9 @@ C_0 = C_0b + C_0f; %Total drug in system
 Neu = [0,0,1,1]; %Neumann Boundary Conditions
 Dir = [0,0,0,0]; % Dirichlet Boundary Conditions
 
-function [D] = Diffusivity1(x1) 
-D1 = 3600*50.e-5;   %Diffusion coefficient (mm^2/h) in wafer for Carmustine
-% D1 = 3600*50.e-3;
+function [D] = Diffusivity1(x1,varargin) 
+D1 = 3600*50.e-7;   %Diffusion coefficient (mm^2/h) in wafer for Carmustine
+D_EFF = length(varargin)/2
 for i = 1:length(x1)
         D = D1;
 end
@@ -77,7 +80,16 @@ end
 
 function [D] = Diffusivity2(x2)
 D2 = 3600*50.e-5;  %" " " water for Carmustine
-% D2 = 3600*50.e-3;
+
+for i = 1:length(x2)
+        D = D2;
+end
+
+end
+
+function [D] = Diffusivity3(x2)
+D2 = 3600*50.e-6;  %" " " water for Carmustine
+
 for i = 1:length(x2)
         D = D2;
 end
@@ -106,39 +118,37 @@ A_temp = cell(length(varargin),1);
 b_temp = cell(length(varargin),1);
 M_temp = cell(length(varargin),1);
 
-
-A_temp{1} = GaussStiffnessAssembler1D_Diff(X{1},Dir,w,@Diffusivity1,y);
-A_temp{2} = GaussStiffnessAssembler1D_Diff(X{2},Dir,w,@Diffusivity2,y);
-A_temp{3} = GaussStiffnessAssembler1D_Diff(X{3},Dir,w,@Diffusivity1,y);
-A_temp{4} = GaussStiffnessAssembler1D_Diff(X{4},Dir,w,@Diffusivity2,y);
-
-b_temp{1} = GaussLoadAssembler1D(X{1},@Sourcef_2,Neu,Dir,y,w);
-b_temp{2} = GaussLoadAssembler1D(X{2},@Sourcef_2,Neu,Dir,y,w);
-b_temp{3} = GaussLoadAssembler1D(X{3},@Sourcef_2,Neu,Dir,y,w);
-b_temp{4} = GaussLoadAssembler1D(X{4},@Sourcef_2,Neu,Dir,y,w);
-
-M_temp{1} = GaussMassAssembler1D(X{1},Dir,y,w);
-M_temp{2} = GaussMassAssembler1D(X{2},Dir,y,w);
-M_temp{3} = GaussMassAssembler1D(X{3},Dir,y,w);
-M_temp{4} = GaussMassAssembler1D(X{4},Dir,y,w);
-
-% for i = 1:length(varargin)/2;
-%     
-% A_temp{1} = GaussStiffnessAssembler1D_Diff(X{i},Dir,w,@Diffusivity1,y);
-% A_temp{2} = GaussStiffnessAssembler1D_Diff(X{i+1},Dir,w,@Diffusivity2,y);
-% A_temp{3} = A_temp{1};
-% A_temp{4} = A_temp{2};
+% A_temp{1} = GaussStiffnessAssembler1D_Diff(X{1},Dir,w,@Diffusivity1,y);
+% A_temp{2} = GaussStiffnessAssembler1D_Diff(X{2},Dir,w,@Diffusivity2,y);
+% A_temp{3} = GaussStiffnessAssembler1D_Diff(X{3},Dir,w,@Diffusivity1,y);
+% A_temp{4} = GaussStiffnessAssembler1D_Diff(X{4},Dir,w,@Diffusivity2,y);
 % 
-% b_temp{1} = GaussLoadAssembler1D(X{i},@Sourcef_2,Neu,Dir,y,w);
-% b_temp{2} = GaussLoadAssembler1D(X{i+1},@Sourcef_2,Neu,Dir,y,w);
-% b_temp{3} = b_temp{1};
-% b_temp{4} = b_temp{2};
+% b_temp{1} = GaussLoadAssembler1D(X{1},@Sourcef_2,Neu,Dir,y,w);
+% b_temp{2} = GaussLoadAssembler1D(X{2},@Sourcef_2,Neu,Dir,y,w);
+% b_temp{3} = GaussLoadAssembler1D(X{3},@Sourcef_2,Neu,Dir,y,w);
+% b_temp{4} = GaussLoadAssembler1D(X{4},@Sourcef_2,Neu,Dir,y,w);
 % 
-% M_temp{1} = GaussMassAssembler1D(X{i},Dir,y,w);
-% M_temp{2} = GaussMassAssembler1D(X{i+1},Dir,y,w);
-% M_temp{3} = M_temp{1};
-% M_temp{4} = M_temp{2};
-% end
+% M_temp{1} = GaussMassAssembler1D(X{1},Dir,y,w);
+% M_temp{2} = GaussMassAssembler1D(X{2},Dir,y,w);
+% M_temp{3} = GaussMassAssembler1D(X{3},Dir,y,w);
+% M_temp{4} = GaussMassAssembler1D(X{4},Dir,y,w);
+
+for l = 1:2:length(varargin);
+
+    A_temp{l} = GaussStiffnessAssembler1D_Diff(X{l},Dir,w,@Diffusivity1,y);
+    A_temp{l+1} = GaussStiffnessAssembler1D_Diff(X{l+1},Dir,w,@Diffusivity2,y);
+
+    b_temp{l} = GaussLoadAssembler1D(X{l},@Sourcef_2,Neu,Dir,y,w);
+    b_temp{l+1} = GaussLoadAssembler1D(X{l+1},@Sourcef_2,Neu,Dir,y,w);
+
+    M_temp{l} = GaussMassAssembler1D(X{l},Dir,y,w);
+    M_temp{l+1} = GaussMassAssembler1D(X{l+1},Dir,y,w);
+
+end
+
+A_temp{length(varargin)+1} = GaussStiffnessAssembler1D_Diff(X{end},Dir,w,@Diffusivity3,y);
+b_temp{length(varargin)+1} = GaussLoadAssembler1D(X{end},@Sourcef_2,Neu,Dir,y,w);
+M_temp{length(varargin)+1} = GaussMassAssembler1D(X{end},Dir,y,w);
 
 A = StiffnessAssemblerDiscontN(A_temp);
 b = LoadAssemblerDiscontN(b_temp);
@@ -147,28 +157,38 @@ M = StiffnessAssemblerDiscontN(M_temp);
 %Solve System at each time point
 
 u = zeros(length(x),length(t));
-% for i = 1:2:length(varargin)-1
-%     for j = 1:length(X{i})
-%         u(j,1) = C_0f;
-%     end
-%     for j = 1:length(X{i+1})
-%         u(j,1) = C_0b;
-%     end
-% end
+
+store_start = [];
 
 for i = 1:2:length(varargin)-1
+    
     for j = 1:length(X{i})
-        u(j,1) = C_0f;
+        u(j+length(store_start),1) = C_0b;
     end
+    
+    store_start = [store_start,X{i}];
+
     for j = 1:length(X{i+1})
-        u(j,1) = C_0b;
+        u(j+length(store_start),1) = C_0f;
     end
+    
+    store_start = [store_start,X{i+1}];
+
 end
 
-size(M)
-size(A)
-size(b)
-size(u)
+% for j = 1:length(X{1})
+%     u(j,1) = C_0b;
+% end
+% for j = length(X{1}):length(X{1}) + length(X{2})
+%     u(j,1) = C_0f;
+% end
+% for j = length(X{1}) + length(X{2}):length(X{1}) + length(X{2}) + length(X{3})
+%     u(j,1) = C_0b;
+% end
+% for j = length(X{1}) + length(X{2}) + length(X{3}):length(X{1}) + length(X{2}) + length(X{3}) + length(X{4})
+%     u(j,1) = C_0f;
+% end
+
 theta = 1;
 LHS = M/tau + theta*A;
 
