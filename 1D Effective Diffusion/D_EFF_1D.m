@@ -75,7 +75,8 @@ D1 = 3600*50.e-7;   %Diffusion coefficient (mm^2/h) in wafer for Carmustine
 D_EFF = 1/((1/(3600*50.e-7) + 1/(3600*50.e-5))/2); %Effective diffusion
 
 for i = 1:length(x1)
-        D = D_EFF;
+%         D = D_EFF;
+        D = D1;
 end
 
 end
@@ -86,7 +87,8 @@ D2 = 3600*50.e-5;  %" " " water for Carmustine
 D_EFF = 1/((1/(3600*50.e-7) + 1/(3600*50.e-5))/2); %Effective diffusion
 
 for i = 1:length(x2)
-        D = D_EFF;
+%         D = D_EFF;
+        D = D2;
 end
 
 end
@@ -121,21 +123,6 @@ N=2;
 A_temp = cell(length(varargin),1);
 b_temp = cell(length(varargin),1);
 M_temp = cell(length(varargin),1);
-
-% A_temp{1} = GaussStiffnessAssembler1D_Diff(X{1},Dir,w,@Diffusivity1,y);
-% A_temp{2} = GaussStiffnessAssembler1D_Diff(X{2},Dir,w,@Diffusivity2,y);
-% A_temp{3} = GaussStiffnessAssembler1D_Diff(X{3},Dir,w,@Diffusivity1,y);
-% A_temp{4} = GaussStiffnessAssembler1D_Diff(X{4},Dir,w,@Diffusivity2,y);
-% 
-% b_temp{1} = GaussLoadAssembler1D(X{1},@Sourcef_2,Neu,Dir,y,w);
-% b_temp{2} = GaussLoadAssembler1D(X{2},@Sourcef_2,Neu,Dir,y,w);
-% b_temp{3} = GaussLoadAssembler1D(X{3},@Sourcef_2,Neu,Dir,y,w);
-% b_temp{4} = GaussLoadAssembler1D(X{4},@Sourcef_2,Neu,Dir,y,w);
-% 
-% M_temp{1} = GaussMassAssembler1D(X{1},Dir,y,w);
-% M_temp{2} = GaussMassAssembler1D(X{2},Dir,y,w);
-% M_temp{3} = GaussMassAssembler1D(X{3},Dir,y,w);
-% M_temp{4} = GaussMassAssembler1D(X{4},Dir,y,w);
 
 for l = 1:2:length(varargin);
 

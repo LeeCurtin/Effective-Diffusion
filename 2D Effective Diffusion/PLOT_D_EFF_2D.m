@@ -26,7 +26,7 @@ for i = 1:length(tspan)
     colormap(cool);
     Z1 = reshape(uout1(:,i),size(X));
     surf(xgrid,ygrid,Z1);
-    axis([-3 3 -3 3 -0.01 1.01]);
+    axis([-1.5 1.5 -1.5 1.5 -0.01 1.01]);
     title('Diffusion');
     zlabel('Concentration');
     shading interp;
